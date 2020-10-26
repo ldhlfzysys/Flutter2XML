@@ -29,7 +29,9 @@ Widget exportCard1() {
                     labelStyle: TextStyle(
                       fontSize: 22,
                     ),
-                    onTap: (value) {},
+                    onTap: (value) {
+                      return 'mytap(value.mid)';
+                    },
                     unselectedLabelStyle: TextStyle(fontSize: 16),
                     tabs: [
                       Tab(

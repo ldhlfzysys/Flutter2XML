@@ -3,10 +3,10 @@ import 'package:analyzer/dart/analysis/features.dart';
 import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/ast/ast.dart';
-// import 'package:dart2xml/test/widget_test.dart';
+import 'package:args/args.dart';
 import 'package:dart2xml/xmlnode.dart';
 // import 'package:flutter/material.dart';
-import 'package:args/args.dart';
+// import 'package:dart2xml/test/widget_test.dart';
 
 void main(List<String> arguments) {
   // Widget demo = exportCard1();
@@ -30,6 +30,7 @@ void main(List<String> arguments) {
 class Flutter2DartVisitor extends GeneralizingAstVisitor<Map> {
   @override
   Map visitNode(AstNode node) {
+    stdout.writeln(node.toString() + '>>>>>>>>>' + node.runtimeType.toString());
     disaptchAstNode(node);
     return super.visitNode(node);
   }

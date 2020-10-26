@@ -182,6 +182,10 @@ String outputXML(BaseNode node) {
       if (value is int) {
         value = value.toString();
       }
+      //处理手势类，如果带了=号，认为值包含了属性部分
+      if (['onTap', 'onLongPress', 'onDoubleTap'].contains(key)) {
+        key = '@' + key;
+      }
       outputString += ' ' + key + '="' + value.toString() + '"';
     });
     //vue语法兼容
