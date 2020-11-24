@@ -120,6 +120,14 @@ void createDoubleLiteralImpl(AstNode node) {
   }
 }
 
+void vdataparse(MethodInvocationNode node, String key, String value) {
+  if (value.startsWith('this.')) {
+    key = ':' + key;
+    value = value.replaceFirst('this.', '');
+  }
+  node.attrs[key] = value;
+}
+
 //vue data标注
 void vdata(MethodInvocationNode node) {
   if (node.xmlName == 'WBListView') {
@@ -127,6 +135,8 @@ void vdata(MethodInvocationNode node) {
     changeKeyName(node.attrs, 'key');
   } else if (node.xmlName == 'WBImage') {
     changeKeyName(node.attrs, 'url');
+  } else if (node.xmlName == 'WBRecyclerView') {
+    changeKeyName(node.attrs, 'list');
   }
 }
 
@@ -142,8 +152,9 @@ void createSimpleStringLiteralImpl(AstNode node) {
   BaseNode parent = findParentNode(node);
   if (parent is NamedExpressionNode) {
     MethodInvocationNode superp = parent.parent;
-    superp.attrs[parent.key] = realNode.value;
-    vdata(superp);
+    vdataparse(superp, parent.key, realNode.value);
+    // superp.attrs[parent.key] = realNode.value;
+    // vdata(superp);
   }
   if (parent is MethodInvocationNode) {
     parent.wbargs.add(realNode.value);
@@ -176,6 +187,9 @@ String outputXML(BaseNode node) {
   if (node is MethodInvocationNode) {
     //step1 拼接标签头
     String xmlName = node.xmlName.replaceAll('.', ':');
+    if (xmlName == 'WBTemplate') {
+      xmlName = 'template';
+    }
     outputString += '<' + xmlName;
     //step2 先看有没有attrs属性，需要拼到标签头
     node.attrs.forEach((key, value) {

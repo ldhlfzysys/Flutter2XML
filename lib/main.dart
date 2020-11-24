@@ -1,66 +1,19 @@
-import 'dart:io';
-import 'package:analyzer/dart/analysis/features.dart';
-import 'package:analyzer/dart/analysis/utilities.dart';
-import 'package:analyzer/dart/ast/visitor.dart';
-import 'package:analyzer/dart/ast/ast.dart';
-import 'package:args/args.dart';
-import 'package:dart2xml/xmlnode.dart';
-// import 'package:flutter/material.dart';
-// import 'package:dart2xml/test/widget_test.dart';
+import 'package:dart2xml/movie/detailCmt.dart';
+import 'package:dart2xml/wbui/wb_colors.dart';
+import 'package:flutter/material.dart';
 
 void main(List<String> arguments) {
-  // Widget demo = exportCard1();
-  // runApp(MaterialApp(
-  //   home: demo,
-  // ));
-
-  exitCode = 0; // presume success
-  final parser = ArgParser()..addFlag("file", negatable: false, abbr: 'f');
-
-  var argResults = parser.parse(arguments);
-  final paths = argResults.rest;
-  if (paths.isEmpty) {
-    stdout.writeln('No file found');
-  } else {
-    stdout.write(paths[0]);
-    generate(paths[0]);
-  }
-}
-
-class Flutter2DartVisitor extends GeneralizingAstVisitor<Map> {
-  @override
-  Map visitNode(AstNode node) {
-    stdout.writeln(node.toString() + '>>>>>>>>>' + node.runtimeType.toString());
-    disaptchAstNode(node);
-    return super.visitNode(node);
-  }
-}
-
-//生成AST
-Future generate(String path) async {
-  if (path.isEmpty) {
-    stdout.writeln("No file found");
-  } else {
-    await _handleError(path);
-    if (exitCode == 2) {
-      try {
-        var parseResult =
-            parseFile(path: path, featureSet: FeatureSet.fromEnableFlags([]));
-        var compilationUnit = parseResult.unit;
-        compilationUnit.accept(Flutter2DartVisitor());
-        String xml = outputXML(root);
-        stdout.writeln(xml);
-      } catch (e) {
-        stdout.writeln('Parse file error: ${e.toString()}');
-      }
-    }
-  }
-}
-
-Future _handleError(String path) async {
-  if (await FileSystemEntity.isDirectory(path)) {
-    stderr.writeln('error: $path is a directory');
-  } else {
-    exitCode = 2;
-  }
+  runApp(MaterialApp(
+    theme: ThemeData(
+        brightness: Brightness.light,
+        primaryColor: WBColors().skinColor(WBColorKey.CommonBackground),
+        splashColor: Color.fromRGBO(0, 0, 0, 0),
+        highlightColor: Color.fromRGBO(0, 0, 0, 0),
+        buttonTheme: new ButtonThemeData(
+            minWidth: 0,
+            height: 0,
+            padding: EdgeInsets.all(0),
+            buttonColor: Colors.transparent)),
+    home: mymovie(),
+  ));
 }
