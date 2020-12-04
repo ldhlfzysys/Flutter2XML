@@ -26,7 +26,10 @@ Widget mymovie() {
                           count: 2,
                           sliderWidth: 30,
                           color: Colors.yellow,
-                          edgeInsets: EdgeInsets.only(left: 45)),
+                          insets: [
+                            EdgeInsets.only(left: 30),
+                            EdgeInsets.only(left: 45),
+                          ]),
                       labelStyle:
                           TextStyle(fontSize: 22, fontWeight: FontWeight.w300),
                       unselectedLabelStyle:
@@ -34,13 +37,14 @@ Widget mymovie() {
                       tabs: [
                         Tab(
                           child: Container(
+                            color: Colors.red,
                             height: 48,
                             margin: EdgeInsets.only(bottom: 12),
                             child: Row(
                               children: [
                                 Text("大V点评"),
                                 Text(
-                                  "(xx条)",
+                                  "(242条)",
                                   style: TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w100),
@@ -55,12 +59,12 @@ Widget mymovie() {
                             margin: EdgeInsets.only(bottom: 12),
                             child: Row(
                               children: [
-                                Text("评论"),
+                                Text("讨论"),
                                 Text(
-                                  "(xx条)",
+                                  "（xxxxx条）",
                                   style: TextStyle(
                                       fontSize: 13,
-                                      fontWeight: FontWeight.w100),
+                                      fontWeight: FontWeight.w300),
                                 )
                               ],
                             ),

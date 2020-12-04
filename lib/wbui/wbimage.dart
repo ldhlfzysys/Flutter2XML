@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+enum WBTextureImageType {
+  image,
+}
+
 class WBImage extends StatelessWidget {
   final Size size;
   WBImage({

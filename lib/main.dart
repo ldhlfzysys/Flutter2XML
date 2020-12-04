@@ -15,5 +15,12 @@ void main(List<String> arguments) {
             padding: EdgeInsets.all(0),
             buttonColor: Colors.transparent)),
     home: mymovie(),
+    builder: (context, widget) {
+      return MediaQuery(
+        //设置文字大小不随系统设置改变
+        data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+        child: widget,
+      );
+    },
   ));
 }

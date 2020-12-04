@@ -45,7 +45,7 @@ Widget feed() {
                   )),
                 ),
                 Container(
-                  width: 80,
+                  width: 55,
                   height: 26,
                   margin: EdgeInsets.only(right: 12),
                   child: OutlineButton(

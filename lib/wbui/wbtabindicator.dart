@@ -10,8 +10,10 @@ class WBTabIndicator extends Decoration {
       {@required Color color,
       @required int count,
       double sliderWidth = 20,
-      EdgeInsets edgeInsets = const EdgeInsets.all(0.0)})
-      : _painter = _CirclePainter(color, count, sliderWidth, edgeInsets);
+      EdgeInsets edgeInsets = const EdgeInsets.all(0.0),
+      List<EdgeInsets> insets})
+      : _painter =
+            _CirclePainter(color, count, sliderWidth, edgeInsets, insets);
 
   @override
   BoxPainter createBoxPainter([onChanged]) => _painter;
@@ -22,8 +24,10 @@ class _CirclePainter extends BoxPainter {
   final int count;
   final double sliderWidth;
   final EdgeInsets edgeInsets;
+  final List<EdgeInsets> insets;
 
-  _CirclePainter(Color color, this.count, this.sliderWidth, this.edgeInsets)
+  _CirclePainter(
+      Color color, this.count, this.sliderWidth, this.edgeInsets, this.insets)
       : _paint = Paint()
           ..color = color
           ..strokeWidth = 3
@@ -65,8 +69,8 @@ class _CirclePainter extends BoxPainter {
     double originRight = spaceWidth + sliderWidth + (oneWidth * rightnIndex);
 
     //位移
-    originLeft = originLeft - edgeInsets.left;
-    originRight = originRight - edgeInsets.left;
+    originLeft = originLeft;
+    originRight = originRight;
 
     double changeRate = relativeOffset % 1;
     //变化的长度
@@ -77,41 +81,39 @@ class _CirclePainter extends BoxPainter {
     double slider_position = 33;
     double slider_height = 3;
     //当前滑动否过半
-    if (relativeOffset - leftIndex < 0.5) {
-      //未过半，左边固定，右边不断增长
-      if (changeRate < 1) {
-        Rect rect = Rect.fromLTRB(
-            originLeft,
-            slider_position,
-            originLeft + sliderWidth + changeWidth,
-            slider_position + slider_height);
-        RRect rRect = RRect.fromRectAndRadius(rect, Radius.circular(2.0));
-        canvas.drawRRect(rRect, _paint);
-
-        // canvas.drawLine(Offset(originLeft, 30), Offset(originLeft + sliderWidth + changeWidth , 30), _paint);
-      } else {
-        Rect rect = Rect.fromLTRB(originLeft, slider_position,
-            originLeft + sliderWidth, slider_position + slider_height);
-        RRect rRect = RRect.fromRectAndRadius(rect, Radius.circular(2.0));
-        canvas.drawRRect(rRect, _paint);
-        // canvas.drawLine(Offset(originLeft, 30), Offset(originLeft + sliderWidth , 30), _paint);
-      }
+    double leftOffset = 0;
+    double rightOffset = 0;
+    if (insets != null && insets.length == count) {
+      leftOffset = insets[leftIndex].left;
+      rightOffset = insets[rightnIndex].left;
     } else {
-      if (changeRate < 1) {
-        Rect rect = Rect.fromLTRB(originRight - changeWidthRight - sliderWidth,
-            slider_position, originRight, slider_position + slider_height);
-        RRect rRect = RRect.fromRectAndRadius(rect, Radius.circular(2.0));
-        canvas.drawRRect(rRect, _paint);
+      leftOffset = rightOffset = edgeInsets.left;
+    }
+    //55 40
 
-        // canvas.drawLine(Offset(originRight - changeWidthRight - sliderWidth, 30), Offset(originRight , 30), _paint);
-      } else {
-        Rect rect = Rect.fromLTRB(originRight - sliderWidth, slider_position,
-            originRight, slider_position + slider_height);
-        RRect rRect = RRect.fromRectAndRadius(rect, Radius.circular(2.0));
-        canvas.drawRRect(rRect, _paint);
-
-        // canvas.drawLine(Offset(originRight - sliderWidth, 30), Offset(originRight , 30), _paint);
+    if (changeRate < 0.5) {
+      double roffset = (rightOffset - leftOffset) * changeRate * 2;
+      //未过半，左边固定，右边不断增长
+      Rect rect = Rect.fromLTRB(
+          originLeft - leftOffset,
+          slider_position,
+          originLeft + sliderWidth + changeWidth - leftOffset - roffset,
+          slider_position + slider_height);
+      RRect rRect = RRect.fromRectAndRadius(rect, Radius.circular(2.0));
+      canvas.drawRRect(rRect, _paint);
+    } else {
+      double realRate = 1 - changeRate;
+      if (changeRate == 1) {
+        realRate = 0;
       }
+      double roffset = (rightOffset - leftOffset) * realRate * 2;
+      Rect rect = Rect.fromLTRB(
+          originRight - changeWidthRight - sliderWidth - rightOffset + roffset,
+          slider_position,
+          originRight - rightOffset,
+          slider_position + slider_height);
+      RRect rRect = RRect.fromRectAndRadius(rect, Radius.circular(2.0));
+      canvas.drawRRect(rRect, _paint);
     }
   }
 }
